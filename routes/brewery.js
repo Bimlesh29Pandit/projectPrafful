@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/search", async (req, res) => {
   const { city, name, type } = req.query;
-  let url = "https://api.openbrewerydb.org/v1/breweries";
+  let url = "http://api.openbrewerydb.org/v1/breweries";
 
   if (city) {
     url += `?by_city=${city}`;
