@@ -14,18 +14,25 @@ router.post("/signup", async (req, res) => {
     if (user) {
       return res.status(401).json({ msg: "User already exists" });
     }
-    bcrypt.hash(password, 10, async (err, hash) => {
-      if (err) {
-        return res.status(400).send("something went wrong during hashing");
-      }
-      user = new User({
-        username,
-        password: hash,
-      });
+    // bcrypt.hash(password, 10, async (err, hash) => {
+    //   if (err) {
+    //     return res.status(400).send("something went wrong during hashing");
+    //   }
+    //   user = new User({
+    //     username,
+    //     password: hash,
+    //   });
 
-      await user.save();
+    //   await user.save();
+    // });
+    console.log(password);
+    user = new User({
+      username,
+      password,
     });
 
+    await user.save();
+    // console.log(passowrd);
     // const payload = { user: { id: user.id } };
 
     // jwt.sign(payload, "your_jwt_secret", { expiresIn: 3600 }, (err, token) => {
@@ -45,12 +52,13 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(400).json({ msg: "Invalid credentials" });
+      return res.status(400).json({ msg: "User not found !!" });
     }
-
+    // console.log(user.password);
     const isMatch = await bcrypt.compare(password, user.password);
+    // console.log(isMatch);
     if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid credentials" });
+      return res.status(400).json({ msg: "Invalid Password" });
     }
 
     const payload = { id: user.id, username: user.username };
